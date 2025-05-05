@@ -12,6 +12,7 @@ import lox.Expr.Variable;
 import lox.Stmt.Block;
 import lox.Stmt.If;
 import lox.Stmt.Var;
+import lox.Stmt.While;
 
 public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 	private Environment environment = new Environment();
@@ -218,5 +219,13 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 				return left;
 		}
 		return evaluate(expr.right);
+	}
+
+	@Override
+	public Void visitWhileStmt(While stmt) {
+		while (isTruthy(evaluate(stmt.condition))) {
+			execute(stmt.body);
+		}
+		return null;
 	}
 }
