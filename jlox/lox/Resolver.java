@@ -1,31 +1,31 @@
-package lox;
+package jlox.lox;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
-import lox.Expr.Assign;
-import lox.Expr.Binary;
-import lox.Expr.Call;
-import lox.Expr.Get;
-import lox.Expr.Grouping;
-import lox.Expr.Literal;
-import lox.Expr.Logical;
-import lox.Expr.Set;
-import lox.Expr.Super;
-import lox.Expr.This;
-import lox.Expr.Unary;
-import lox.Expr.Variable;
-import lox.Stmt.Block;
-import lox.Stmt.Class;
-import lox.Stmt.Expression;
-import lox.Stmt.Function;
-import lox.Stmt.If;
-import lox.Stmt.Print;
-import lox.Stmt.Return;
-import lox.Stmt.Var;
-import lox.Stmt.While;
+import jlox.lox.Expr.Assign;
+import jlox.lox.Expr.Binary;
+import jlox.lox.Expr.Call;
+import jlox.lox.Expr.Get;
+import jlox.lox.Expr.Grouping;
+import jlox.lox.Expr.Literal;
+import jlox.lox.Expr.Logical;
+import jlox.lox.Expr.Set;
+import jlox.lox.Expr.Super;
+import jlox.lox.Expr.This;
+import jlox.lox.Expr.Unary;
+import jlox.lox.Expr.Variable;
+import jlox.lox.Stmt.Block;
+import jlox.lox.Stmt.Class;
+import jlox.lox.Stmt.Expression;
+import jlox.lox.Stmt.Function;
+import jlox.lox.Stmt.If;
+import jlox.lox.Stmt.Print;
+import jlox.lox.Stmt.Return;
+import jlox.lox.Stmt.Var;
+import jlox.lox.Stmt.While;
 
 public class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
 	private final Interpreter interpreter;
@@ -41,7 +41,7 @@ public class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
 		None,
 		FUNCTION,
 		INITIALIZER,
-				METHOD
+		METHOD
 	}
 
 	private enum ClassType {

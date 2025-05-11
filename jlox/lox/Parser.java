@@ -1,11 +1,11 @@
-package lox;
+package jlox.lox;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import lox.Token;
+import jlox.lox.Token;
 
 public class Parser {
 	private static class ParseError extends RuntimeException {
