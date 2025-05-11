@@ -36,7 +36,7 @@ public class Parser {
 				return classDeclaration();
 			}
 			if (match(TokenType.FUN)) {
-				return function("fuction");
+				return function("function");
 			}
 			if (match(TokenType.VAR)) {
 				return varDeclaration();
