@@ -13,6 +13,7 @@ import lox.Expr.Grouping;
 import lox.Expr.Literal;
 import lox.Expr.Logical;
 import lox.Expr.Set;
+import lox.Expr.This;
 import lox.Expr.Unary;
 import lox.Expr.Variable;
 import lox.Stmt.Block;
@@ -29,6 +30,7 @@ public class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
 	private final Interpreter interpreter;
 	private final Stack<Map<String, Boolean>> scopes = new Stack<>();
 	private FunctionType currentFunction = FunctionType.None;
+	private ClassType currentClass = ClassType.NONE;
 
 	Resolver(Interpreter interpreter) {
 		this.interpreter = interpreter;
@@ -38,6 +40,11 @@ public class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
 		None,
 		FUNCTION,
 		METHOD
+	}
+
+	private enum ClassType {
+		NONE,
+		CLASS
 	}
 
 	void resolve(List<Stmt> statements) {
@@ -224,12 +231,22 @@ public class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
 
 	@Override
 	public Void visitClassStmt(Class stmt) {
+		ClassType enclosingClass = currentClass;
+		currentClass = ClassType.CLASS;
+
 		declare(stmt.name);
 		define(stmt.name);
+
+		beginScope();
+		scopes.peek().put("this", true);
 
 		for (Stmt.Function method : stmt.methods) {
 			resolveFunction(method, FunctionType.METHOD);
 		}
+
+		endScope();
+
+		currentClass = enclosingClass;
 
 		return null;
 	}
@@ -244,6 +261,15 @@ public class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
 	public Void visitSetExpr(Set expr) {
 		resolve(expr.value);
 		resolve(expr.object);
+		return null;
+	}
+
+	@Override
+	public Void visitThisExpr(This expr) {
+		if (currentClass == ClassType.NONE) {
+			Lox.error(expr.keyword, "Can't use 'this' outside of a class.");
+		}
+		resolveLocal(expr, expr.keyword);
 		return null;
 	}
 
