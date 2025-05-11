@@ -8,12 +8,15 @@ import java.util.Stack;
 import lox.Expr.Assign;
 import lox.Expr.Binary;
 import lox.Expr.Call;
+import lox.Expr.Get;
 import lox.Expr.Grouping;
 import lox.Expr.Literal;
 import lox.Expr.Logical;
+import lox.Expr.Set;
 import lox.Expr.Unary;
 import lox.Expr.Variable;
 import lox.Stmt.Block;
+import lox.Stmt.Class;
 import lox.Stmt.Expression;
 import lox.Stmt.Function;
 import lox.Stmt.If;
@@ -33,7 +36,8 @@ public class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
 
 	private enum FunctionType {
 		None,
-		FUNCTION
+		FUNCTION,
+		METHOD
 	}
 
 	void resolve(List<Stmt> statements) {
@@ -215,6 +219,31 @@ public class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
 			Lox.error(expr.name, "Can't read local variable in its own initializer.");
 		}
 		resolveLocal(expr, expr.name);
+		return null;
+	}
+
+	@Override
+	public Void visitClassStmt(Class stmt) {
+		declare(stmt.name);
+		define(stmt.name);
+
+		for (Stmt.Function method : stmt.methods) {
+			resolveFunction(method, FunctionType.METHOD);
+		}
+
+		return null;
+	}
+
+	@Override
+	public Void visitGetExpr(Get expr) {
+		resolve(expr.object);
+		return null;
+	}
+
+	@Override
+	public Void visitSetExpr(Set expr) {
+		resolve(expr.value);
+		resolve(expr.object);
 		return null;
 	}
 
