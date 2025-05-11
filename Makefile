@@ -5,9 +5,9 @@ JC = javac
 JFLAGS = -d build
 JVM = java
 BUILD_DIR = build
-SRC_DIR = lox
+SRC_DIR = jlox/lox
 SRC_FILES = $(SRC_DIR)/*.java
-MAIN_CLASS = lox.Lox
+MAIN_CLASS = jlox.lox.Lox
 
 # Default target
 all: compile
